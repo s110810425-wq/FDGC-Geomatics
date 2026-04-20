@@ -234,12 +234,13 @@
             gap: 60px;
             align-items: center;
         }
-        /* 修改後：加入 text-align: justify; */
+
+        /* 桌面版保持左右分散對齊 */
         .about-text p {
             margin-bottom: 20px;
             font-size: 1.15rem;
             color: var(--text-muted);
-            text-align: justify; /* NEW: 實現左右分散對齊 */
+            text-align: justify;
         }
 
         .about-img {
@@ -337,11 +338,11 @@
             margin-bottom: 15px;
         }
 
-        /* 修改後：加入 text-align: justify; */
+        /* 桌面版保持左右分散對齊 */
         .card-content p {
             color: var(--text-muted);
             font-size: 0.95rem;
-            text-align: justify; /* NEW: 實現左右分散對齊 */
+            text-align: justify;
         }
 
         /* 頁尾與聯絡表單 */
@@ -377,9 +378,9 @@
                 display: none;
             }
 
-            /* 縮小品牌名稱字體，避免換行 */
+            /* 縮小品牌名稱字體，避免換行與重疊 */
             .brand-name {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
 
             .logo-img {
@@ -388,8 +389,8 @@
 
             /* 2. 主視覺區塊 (Hero) 優化 */
             .hero {
-                padding: 60px 15px; /* 減少不必要的留白 */
-                height: auto; /* 解除滿版高度限制，讓內容決定高度 */
+                padding: 60px 15px;
+                height: auto;
                 min-height: 80vh;
             }
 
@@ -403,7 +404,7 @@
 
             /* 3. 網格與區塊留白優化 */
             .content-section {
-                padding: 60px 5%; /* 縮減上下留白，從 100px 降至 60px */
+                padding: 60px 5%; /* 縮減上下留白 */
             }
 
             .section-title {
@@ -417,8 +418,9 @@
                 gap: 30px;
             }
 
-            .about-text p {
-                text-align: left; /* 在手機窄螢幕上，靠左對齊通常比分散對齊好讀 */
+            /* 在手機窄螢幕上，取消分散對齊，改為靠左對齊以避免字距過大 */
+            .about-text p, .card-content p {
+                text-align: left;
             }
 
             /* 4. 卡片網格強制單行 */
@@ -436,7 +438,6 @@
                 transform: scale(1.05);
             }
         }
-
     </style>
 </head>
 <body>
