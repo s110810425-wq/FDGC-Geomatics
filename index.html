@@ -361,6 +361,82 @@
         footer p {
             color: #94A3B8;
         }
+
+        /* ==========================================================
+           【全新新增】手機版響應式設計 (RWD)
+           當螢幕寬度小於 768px 時，啟動以下排版修正
+           ========================================================== */
+        @media screen and (max-width: 768px) {
+            /* 1. Header 與 導覽列優化 */
+            header {
+                padding: 1rem;
+            }
+
+            /* 在手機版隱藏擁擠的導覽列與聯絡按鈕 */
+            nav {
+                display: none;
+            }
+
+            /* 縮小品牌名稱字體，避免換行 */
+            .brand-name {
+                font-size: 1.1rem;
+            }
+
+            .logo-img {
+                height: 40px; /* 縮小 Logo 比例 */
+            }
+
+            /* 2. 主視覺區塊 (Hero) 優化 */
+            .hero {
+                padding: 60px 15px; /* 減少不必要的留白 */
+                height: auto; /* 解除滿版高度限制，讓內容決定高度 */
+                min-height: 80vh;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem; /* 縮小主標題 */
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            /* 3. 網格與區塊留白優化 */
+            .content-section {
+                padding: 60px 5%; /* 縮減上下留白，從 100px 降至 60px */
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+
+            /* 將「關於公司」的左右排版，改為上下單行排列 */
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .about-text p {
+                text-align: left; /* 在手機窄螢幕上，靠左對齊通常比分散對齊好讀 */
+            }
+
+            /* 4. 卡片網格強制單行 */
+            .card-grid,
+            #equipment .card-grid {
+                grid-template-columns: 1fr; /* 所有卡片區塊都變成垂直單行排列 */
+                gap: 20px;
+            }
+
+            /* 針對手機微調第一張無人機照片的大小，避免超出邊界 */
+            #equipment .card:first-child .card-img {
+                transform: scale(1.05);
+            }
+            #equipment .card:first-child:hover .card-img {
+                transform: scale(1.05);
+            }
+        }
+
     </style>
 </head>
 <body>
