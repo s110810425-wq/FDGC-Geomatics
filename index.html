@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frozen Dimensions Geomatics Center</title>
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <style>
+        /* === 重新定義：藍、白、黑 科技配色 === */
+        :root {
+            --primary-blue: #0A5A9A;
+            --primary-hover: #084373;
+            --pure-white: #FFFFFF;
+            --bg-light: #F8FAFC;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --pure-black: #0F172A;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            background-color: var(--pure-white);
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        /* 導覽列與 Header */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+        }
+
+        .brand-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover { color: var(--primary-blue); }
+        .nav-link:hover::after { width: 100%; }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--pure-white);
+            padding: 10px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(10, 90, 154, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(10, 90, 154, 0.4);
+        }
+
+        /* === 主視覺區塊 (滿版與動態輪播) === */
+        .hero {
+            position: relative;
+            height: calc(100vh - 90px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.65);
+            z-index: 1;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            background-color: var(--pure-black);
+        }
+
+        .hero-bg img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            animation: crossfade 18s infinite linear;
+        }
+
+        .hero-bg img:nth-child(1) { animation-delay: 0s; }
+        .hero-bg img:nth-child(2) { animation-delay: 6s; }
+        .hero-bg img:nth-child(3) { animation-delay: 12s; }
+
+        @keyframes crossfade {
+            0% { opacity: 0; transform: scale(1); }
+            10% { opacity: 1; }
+            25% { opacity: 1; }
+            35% { opacity: 0; transform: scale(1.08); }
+            100% { opacity: 0; transform: scale(1.08); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--pure-white);
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .hero h1 span {
+            color: #60A5FA;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 45px;
+            color: #E2E8F0;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+        }
+
+        /* 滾動顯示動畫類別 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 共用區塊樣式 */
+        .content-section {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--text-main);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 60px;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-blue);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        /* 關於公司區塊 */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        /* 修改後：加入 text-align: justify; */
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            text-align: justify; /* NEW: 實現左右分散對齊 */
+        }
+
+        .about-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            transition: transform 0.5s ease;
+        }
+
+        .about-img:hover {
+            transform: scale(1.02);
+        }
+
+        /* 卡片網格佈局 (通用) */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--pure-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .card-img {
+            height: 220px;
+            width: 100%;
+            transition: transform 0.6s ease;
+        }
+
+        .card:not(#equipment *) :hover .card-img {
+            transform: scale(1.05);
+        }
+
+        /* === 儀器介紹區塊設定 (濃縮以並排) === */
+        #equipment .card-grid {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        #equipment .card-img {
+            height: 180px;
+            object-fit: contain;
+            padding: 15px;
+            background-color: var(--pure-white);
+        }
+
+        #equipment .card-content {
+            border-top: 1px solid rgba(0,0,0,0.08);
+            padding: 25px 15px;
+        }
+
+        #equipment .card:first-child .card-img {
+            padding: 5px;
+            transform: scale(1.1);
+        }
+
+        #equipment .card:first-child:hover .card-img {
+            transform: scale(1.15);
+        }
+
+        #cases .card { border-top: none; }
+        #cases .card-img {
+            object-fit: cover;
+            padding: 0;
+        }
+        #cases .card:hover .card-img { transform: scale(1.08); }
+
+        .card-content {
+            padding: 35px 25px;
+            text-align: center;
+            flex-grow: 1;
+            background-color: var(--pure-white);
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-content h3 {
+            color: var(--text-main);
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        /* 修改後：加入 text-align: justify; */
+        .card-content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-align: justify; /* NEW: 實現左右分散對齊 */
+        }
+
+        /* 頁尾與聯絡表單 */
+        footer {
+            background-color: var(--pure-black);
+            color: var(--pure-white);
+            text-align: center;
+            padding: 80px 20px;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        footer h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        footer p {
+            color: #94A3B8;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="Frozen Dimensions Logo" class="logo-img">
+            <div class="brand-name">FROZEN DIMENSIONS GEOMATICS</div>
+        </div>
+        <nav>
+            <a href="#about" class="nav-link">關於公司</a>
+            <a href="#services" class="nav-link">服務項目</a>
+            <a href="#equipment" class="nav-link">儀器介紹</a>
+            <a href="#cases" class="nav-link">經典案例</a>
+            <a href="#contact" class="btn-primary">聯絡我們</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero reveal">
+            <div class="hero-bg">
+                <img src="images/hero-1.jpg" alt="工作場景 1">
+                <img src="images/hero-2.jpg" alt="工作場景 2">
+                <img src="images/hero-3.jpg" alt="工作場景 3">
+            </div>
+            <div class="hero-content">
+                <h1>精準重塑，看見空間的<span>真實維度</span></h1>
+                <p>專精於 3D 場景重建、影像建模、3DGS 以及無人機空拍測繪。我們將現實世界的物理資訊，轉化為高精度的數位資產。</p>
+                <a href="#about" class="btn-primary" style="padding: 14px 35px; font-size: 1.1rem;">深入了解</a>
+            </div>
+        </section>
+
+        <section id="about" class="content-section reveal">
+            <h2 class="section-title">關於公司</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>Frozen Dimensions Geomatics Center 致力於突破傳統測繪的框架，融合地理資訊系統與尖端運算科技。</p>
+                    <p>我們具備深厚的土木與工程管理背景，精通點雲資料處理、數值攝影測量與地形測量。透過嚴謹的學術論證與實務經驗，為客戶提供高保真的空間資訊解決方案。</p>
+                </div>
+                <img src="images/about-company.jpg" alt="關於公司像片" class="about-img">
+            </div>
+        </section>
+
+        <section id="services" class="content-section reveal" style="background-color: var(--bg-light);">
+            <h2 class="section-title">服務項目</h2>
+            <div class="card-grid">
+                <div class="card" style="border-top: 4px solid var(--primary-blue);">
+                    <div class="card-content">
+                        <h3>無人機測繪與考證教學</h3>
+                        <p>提供專業的無人機空拍服務，並具備完善的證照考訓教學，帶領您安全合法地掌握高空視野。</p>
+                    </div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--primary-blue);">
+                    <div class="card-content">
+                        <h3>3D 場景重建與 3DGS</h3>
+                        <p>運用最先進的 3D Gaussian Splatting 與影像建模技術，將二維影像轉化為具備真實坐標精度的高保真三維模型。</p>
+                    </div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--primary-blue);">
+                    <div class="card-content">
+                        <h3>地理資訊系統 (GIS) 整合</h3>
+                        <p>精通空間資料處理與坐標轉換，為您的工程與專案提供堅實的空間資訊技術支援。</p>
+                    </div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--primary-blue);">
+                    <div class="card-content">
+                        <h3>3D點雲數位化編輯運用</h3>
+                        <p>針對高密度點雲資料進行降噪、分類與特徵提取。提供逆向工程及空間幾何分析，將海量數據轉化為實用圖資。</p>
+                    </div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--primary-blue);">
+                    <div class="card-content">
+                        <h3>軟體開發與 Line Bot 設計</h3>
+                        <p>客製化智能客服機器人，具備自主回覆功能，並能在接收報價需求時即時串接通知公司專員，大幅提升服務效率。</p>
+                    </div>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--primary-blue);">
+                    <div class="card-content">
+                        <h3>網站設計與程式開發</h3>
+                        <p>將空間資料庫與前端網頁無縫對接，為企業打造具備 3D 模型展示能力的高質感專屬網站與系統建置。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="equipment" class="content-section reveal">
+            <h2 class="section-title">專業儀器介紹</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <img src="images/equipment-uav.jpg" alt="無人飛行載具" class="card-img">
+                    <div class="card-content">
+                        <h3>無人飛行載具 (UAV)</h3>
+                        <p>執行高效率的大面積空拍與數值攝影測量，獲取高解析度正射影像與地形模型。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/equipment-scanner.jpg" alt="雷射掃描儀" class="card-img">
+                    <div class="card-content">
+                        <h3>雷射掃描儀 (LiDAR)</h3>
+                        <p>高速獲取極高密度的三維點雲資料，完美捕捉複雜結構與微小地形細節。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/equipment-totalstation.jpg" alt="全測站與衛星定位" class="card-img">
+                    <div class="card-content">
+                        <h3>全測站經緯儀</h3>
+                        <p>確保測區呈現的施測坐標，具備工程級別以上的絕對坐標精度。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/equipment-software.jpg" alt="開發軟體與輔助程式" class="card-img">
+                    <div class="card-content">
+                        <h3>開發軟體與輔助程式</h3>
+                        <p>自主開發空間資訊處理腳本，涵蓋自動化產線及 3D 模型運用介面，提升效率。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/equipment-gis.jpg" alt="地理資訊系統分析與套疊" class="card-img" onerror="this.src='images/equipment-software.jpg'">
+                    <div class="card-content">
+                        <h3>地理資訊系統分析與套疊</h3>
+                        <p>運用高階 GIS 軟體進行多圖層空間分析與套疊，精準呈現地理特徵的時空變遷與關聯。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/equipment-gnss.jpg" alt="GNSS接收儀" class="card-img" onerror="this.src='images/equipment-totalstation.jpg'">
+                    <div class="card-content">
+                        <h3>GNSS 接收儀</h3>
+                        <p>接收多星系衛星訊號，結合 RTK 定位技術，為測繪提供公分級的高精度坐標解算。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cases" class="content-section reveal" style="background-color: var(--bg-light);">
+            <h2 class="section-title">經典案例展示</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <img src="images/case-1.jpg" alt="案例一" class="card-img">
+                    <div class="card-content">
+                        <h3>3DGS 高精度場景渲染</h3>
+                        <p>透過自定義演算法處理之高斯濺射模型，完美還原目標場景之光影與幾何特徵，沉浸式體驗為展示以及觀光提供新穎手段。</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/case-2.jpg" alt="案例二" class="card-img">
+                    <div class="card-content">
+                        <h3>大範圍點雲地形建模</h3>
+                        <p>結合 UAV 與 RTK 控制點，產出具備公分級精度之數值高程模型 (Digital Elevation Model, DEM)。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="reveal">
+        <h2>準備好啟動您的專案了嗎？</h2>
+        <p style="margin-top: 10px;">透過自動化表單與我們聯繫，我們將盡速回覆。</p>
+        <p style="margin-top: 50px; font-size: 0.9rem; opacity: 0.7;">&copy; 2026 Frozen Dimensions Geomatics Center. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+    </script>
+
+</body>
+</html>
