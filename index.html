@@ -322,12 +322,11 @@
                 0px 4px 15px rgba(0,0,0,0.7);
         }
 
-        /* === 【全新加入】「深入了解」按鈕專屬動態特效 === */
+        /* === 「深入了解」按鈕專屬動態特效 === */
         .hero-btn {
             padding: 14px 35px;
             font-size: 1.15rem;
             position: relative;
-            overflow: hidden; /* 確保掃光不會超出按鈕邊界 */
             background: rgba(10, 90, 154, 0.85); /* 半透明品牌藍 */
             backdrop-filter: blur(8px); /* 毛玻璃材質 */
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -340,25 +339,6 @@
             0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.7); }
             70% { box-shadow: 0 0 0 20px rgba(96, 165, 250, 0); }
             100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
-        }
-
-        /* 掃光特效 */
-        .hero-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-            transform: skewX(-25deg);
-            animation: btnSweep 4s infinite; /* 每 4 秒自動掃過一次 */
-        }
-
-        @keyframes btnSweep {
-            0% { left: -100%; }
-            20% { left: 200%; }
-            100% { left: 200%; }
         }
 
         /* 懸浮時的互動回饋 */
@@ -540,12 +520,39 @@
             color: #94A3B8;
         }
 
+        /* 頁尾：專案需求表單主按鈕設定 */
+        .footer-form-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--primary-blue);
+            color: var(--pure-white);
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(10, 90, 154, 0.4);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-form-btn:hover {
+            background-color: var(--pure-white);
+            color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+        }
+
         .footer-socials {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 15px;
         }
 
         .f-social {
@@ -644,6 +651,8 @@
 
             .fab-item i { font-size: 1.2rem; }
 
+            /* 表單特別強調色 */
+            .fab-item .fa-file-signature { color: var(--primary-blue); }
             .fab-item .fa-line { color: #06C755; }
             .fab-item .fa-instagram { color: #E1306C; }
             .fab-item .fa-youtube { color: #FF0000; }
@@ -701,6 +710,9 @@
 
     <div class="mobile-fab-container">
         <div class="mobile-fab-menu" id="fabMenu">
+            <a href="請將您的表單網址貼在這裡" class="fab-item form-link" target="_blank">
+                <i class="fas fa-file-signature"></i> 專案需求聯繫表單
+            </a>
             <a href="https://line.me/R/ti/p/@292qjcre" class="fab-item line" target="_blank">
                 <i class="fab fa-line"></i> Line自動助理
             </a>
@@ -852,6 +864,12 @@
     <footer id="contact" class="reveal">
         <h2>準備好啟動您的專案了嗎？</h2>
         <p style="margin-top: 10px;">透過自動化表單或以下社群平台與我們聯繫，我們將盡速回覆。</p>
+
+        <div>
+            <a href="https://liff.line.me/2009670938-wdxrng0c" target="_blank" class="footer-form-btn">
+                <i class="fas fa-file-signature"></i> 專案需求聯繫表單
+            </a>
+        </div>
 
         <div class="footer-socials">
             <a href="https://line.me/R/ti/p/@292qjcre" class="f-social line" target="_blank"><i class="fab fa-line"></i> LINE 官方帳號</a>
