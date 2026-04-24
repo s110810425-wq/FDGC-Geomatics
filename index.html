@@ -38,11 +38,14 @@
             line-height: 1.7;
         }
 
-        /* 導覽列與 Header */
+        /* ==========================================================
+           【全新美化】頂部 Header：科技感波浪、網格與粒子光暈
+           ========================================================== */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            background: linear-gradient(120deg, #0F172A 0%, #0A5A9A 50%, #084373 100%);
+            background-size: 200% 200%;
+            animation: headerDataFlow 8s ease infinite;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
@@ -50,6 +53,47 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            overflow: hidden;
+        }
+
+        @keyframes headerDataFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.15), transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulseGlow 6s alternate infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.8) translate(10%, 10%); opacity: 0.5; }
+            100% { transform: scale(1.2) translate(-10%, -10%); opacity: 1; }
+        }
+
+        header .logo-container,
+        header nav,
+        header .btn-primary {
+            position: relative;
+            z-index: 1;
         }
 
         .logo-container {
@@ -66,8 +110,9 @@
         .brand-name {
             font-size: 1.4rem;
             font-weight: 800;
-            color: var(--text-main);
+            color: var(--pure-white);
             letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
         nav {
@@ -78,11 +123,11 @@
 
         .nav-link {
             text-decoration: none;
-            color: var(--text-main);
+            color: #E2E8F0;
             font-weight: 600;
             font-size: 1rem;
             position: relative;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
         }
 
         .nav-link::after {
@@ -92,11 +137,14 @@
             height: 2px;
             bottom: -5px;
             left: 0;
-            background-color: var(--primary-blue);
+            background-color: #60A5FA;
             transition: width 0.3s ease;
         }
 
-        .nav-link:hover { color: var(--primary-blue); }
+        .nav-link:hover {
+            color: #60A5FA;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
         .nav-link:hover::after { width: 100%; }
 
         .btn-primary {
@@ -117,6 +165,20 @@
             background-color: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(10, 90, 154, 0.4);
+        }
+
+        header .btn-primary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--pure-white);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+        }
+
+        header .btn-primary:hover {
+            background-color: var(--pure-white);
+            color: var(--primary-blue);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            border-color: var(--pure-white);
         }
 
         /* === 右側懸浮社群列 (僅桌面版) === */
@@ -178,7 +240,9 @@
             display: none;
         }
 
-        /* === 主視覺區塊 (滿版與動態輪播) === */
+        /* ==========================================================
+           【動態背景優化】主視覺區塊 (羽化特效與多層字體陰影)
+           ========================================================== */
         .hero {
             position: relative;
             height: calc(100vh - 90px);
@@ -189,66 +253,120 @@
             text-align: center;
             padding: 20px;
             overflow: hidden;
+            background-color: var(--pure-black); /* 最底層為純黑 */
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.65);
-            z-index: 1;
-        }
-
+        /* 背景相片容器：加入邊緣羽化遮罩 */
         .hero-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0;
-            background-color: var(--pure-black);
+            /* 利用 CSS mask 製作完美的邊緣羽化過渡到黑色背景 */
+            -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 85%);
+            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 85%);
         }
 
-        .hero-bg img {
+        .bg-slide {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover;
             opacity: 0;
-            animation: crossfade 18s infinite linear;
+            transform: scale(1);
+            /* 3 秒的柔和淡入淡出，與放大的質感動畫 */
+            transition: opacity 3s ease-in-out, transform 8s linear;
         }
 
-        .hero-bg img:nth-child(1) { animation-delay: 0s; }
-        .hero-bg img:nth-child(2) { animation-delay: 6s; }
-        .hero-bg img:nth-child(3) { animation-delay: 12s; }
-
-        @keyframes crossfade {
-            0% { opacity: 0; transform: scale(1); }
-            10% { opacity: 1; }
-            25% { opacity: 1; }
-            35% { opacity: 0; transform: scale(1.08); }
-            100% { opacity: 0; transform: scale(1.08); }
+        /* 輪播時啟用的相片狀態 */
+        .bg-slide.active {
+            opacity: 0.55; /* 半透明效果 */
+            transform: scale(1.08); /* 緩慢放大營造沉浸感 */
+            z-index: 1;
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 800px;
+            max-width: 850px;
         }
 
+        /* === 字體邊緣強化 (Text Edge Enhancement) === */
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             color: var(--pure-white);
             margin-bottom: 25px;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+            /* 多層次陰影：創造強烈對比邊緣，確保在任何照片上皆清晰可見 */
+            text-shadow:
+                0px 0px 5px rgba(0,0,0,0.9),
+                0px 2px 10px rgba(0,0,0,0.8),
+                0px 5px 25px rgba(0,0,0,0.9);
         }
 
         .hero h1 span {
             color: #60A5FA;
+            /* 針對藍色字體增加同色系的微光暈 */
+            text-shadow:
+                0px 0px 5px rgba(0,0,0,0.9),
+                0px 0px 15px rgba(96, 165, 250, 0.6),
+                0px 5px 20px rgba(0,0,0,0.8);
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             margin-bottom: 45px;
-            color: #E2E8F0;
-            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+            color: var(--pure-white);
+            font-weight: 500;
+            /* 副標題邊緣強化 */
+            text-shadow:
+                0px 2px 8px rgba(0,0,0,0.9),
+                0px 4px 15px rgba(0,0,0,0.7);
+        }
+
+        /* === 【全新加入】「深入了解」按鈕專屬動態特效 === */
+        .hero-btn {
+            padding: 14px 35px;
+            font-size: 1.15rem;
+            position: relative;
+            overflow: hidden; /* 確保掃光不會超出按鈕邊界 */
+            background: rgba(10, 90, 154, 0.85); /* 半透明品牌藍 */
+            backdrop-filter: blur(8px); /* 毛玻璃材質 */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: btnPulse 3s infinite; /* 呼吸光暈動畫 */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* 呼吸光暈擴散效果 */
+        @keyframes btnPulse {
+            0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(96, 165, 250, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0); }
+        }
+
+        /* 掃光特效 */
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transform: skewX(-25deg);
+            animation: btnSweep 4s infinite; /* 每 4 秒自動掃過一次 */
+        }
+
+        @keyframes btnSweep {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* 懸浮時的互動回饋 */
+        .hero-btn:hover {
+            background: rgba(8, 67, 115, 0.95);
+            border-color: var(--pure-white);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(10, 90, 154, 0.6);
         }
 
         /* 滾動顯示動畫類別 */
@@ -459,7 +577,7 @@
         @media screen and (max-width: 768px) {
             header { padding: 1rem; }
             nav { display: none; }
-            .brand-name { font-size: 1rem; }
+            .brand-name { font-size: 1rem; color: var(--pure-white); }
             .logo-img { height: 40px; }
 
             .hero { padding: 60px 15px; height: auto; min-height: 80vh; }
@@ -477,10 +595,10 @@
             #equipment .card:first-child .card-img,
             #equipment .card:first-child:hover .card-img { transform: scale(1.05); }
 
-            /* 隱藏桌面版的側邊欄 */
+            /* 隱藏桌面版右側懸浮 */
             .social-sidebar { display: none; }
 
-            /* === 【關鍵啟動】開啟手機專屬右下角方格 FAB === */
+            /* 開啟手機版 FAB 結構 */
             .mobile-fab-container {
                 display: flex;
                 flex-direction: column;
@@ -503,14 +621,12 @@
                 transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
 
-            /* 點擊展開後的狀態 */
             .mobile-fab-menu.show {
                 opacity: 1;
                 visibility: visible;
                 transform: translateY(0);
             }
 
-            /* 滾出選單的單獨標籤樣式 */
             .fab-item {
                 background-color: var(--pure-white);
                 color: var(--text-main);
@@ -528,19 +644,17 @@
 
             .fab-item i { font-size: 1.2rem; }
 
-            /* 為不同社群設定個別圖示顏色，加強辨識 */
             .fab-item .fa-line { color: #06C755; }
             .fab-item .fa-instagram { color: #E1306C; }
             .fab-item .fa-youtube { color: #FF0000; }
 
-            /* 右下角帶有 + 號的方格主按鈕 */
             .mobile-fab-toggle {
                 width: 55px;
                 height: 55px;
                 background-color: var(--primary-blue);
                 color: var(--pure-white);
                 border: none;
-                border-radius: 14px; /* 設定為微圓角方格 */
+                border-radius: 14px;
                 font-size: 1.5rem;
                 box-shadow: 0 5px 20px rgba(10, 90, 154, 0.4);
                 cursor: pointer;
@@ -550,7 +664,6 @@
                 align-items: center;
             }
 
-            /* 點擊後方格按鈕旋轉變成 X 關閉符號 */
             .mobile-fab-toggle.active {
                 background-color: var(--text-main);
                 transform: rotate(45deg);
@@ -605,15 +718,12 @@
 
     <main>
         <section class="hero reveal">
-            <div class="hero-bg">
-                <img src="images/hero-1.jpg" alt="工作場景 1">
-                <img src="images/hero-2.jpg" alt="工作場景 2">
-                <img src="images/hero-3.jpg" alt="工作場景 3">
-            </div>
+            <div class="hero-bg"></div>
+
             <div class="hero-content">
-                <h1>精準重塑，看見空間的<span>真實維度</span></h1>
-                <p>專精於 3D 場景重建、影像建模、3DGS 以及無人機空拍測繪。我們將現實世界的物理資訊，轉化為高精度的數位資產。</p>
-                <a href="#about" class="btn-primary" style="padding: 14px 35px; font-size: 1.1rem;">深入了解</a>
+                <h1>精準重塑，空間的<span>真實維度</span></h1>
+                <p>專精於 3D 場景重建、影像建模、3DGS 以及無人機空拍測繪。<br>我們將現實世界的物理資訊，轉化為高精度的數位資產。</p>
+                <a href="#about" class="btn-primary hero-btn">深入了解</a>
             </div>
         </section>
 
@@ -753,7 +863,7 @@
     </footer>
 
     <script>
-        // 1. 原本的滾動載入效果
+        // 1. 滾動顯示載入效果
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -768,17 +878,51 @@
         window.addEventListener("scroll", reveal);
         reveal();
 
-        // 2. 【全新加入】手機版 FAB 點擊展開/收合事件監聽
+        // 2. 手機版 FAB 選單觸發
         var fabToggle = document.getElementById('fabToggle');
         var fabMenu = document.getElementById('fabMenu');
-
         if(fabToggle && fabMenu) {
             fabToggle.addEventListener('click', function() {
-                // 切換選單的顯示狀態
                 fabMenu.classList.toggle('show');
-                // 切換 + 號方塊的旋轉狀態
                 fabToggle.classList.toggle('active');
             });
+        }
+
+        // ==========================================================
+        // 3. 背景工作照隨機輪播引擎
+        // ==========================================================
+
+        const TOTAL_WORK_PHOTOS = 15;
+
+        let photoArray = Array.from({length: TOTAL_WORK_PHOTOS}, (_, i) => i + 1);
+
+        for (let i = photoArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [photoArray[i], photoArray[j]] = [photoArray[j], photoArray[i]];
+        }
+
+        const heroBgContainer = document.querySelector('.hero-bg');
+
+        const imgElements = photoArray.map(num => {
+            const img = document.createElement('img');
+            img.src = `images/work_photo/work_photo(${num}).jpg`;
+            img.className = 'bg-slide';
+            heroBgContainer.appendChild(img);
+            return img;
+        });
+
+        let currentSlide = 0;
+
+        function showNextSlide() {
+            if (imgElements.length === 0) return;
+            imgElements.forEach(img => img.classList.remove('active'));
+            imgElements[currentSlide].classList.add('active');
+            currentSlide = (currentSlide + 1) % imgElements.length;
+        }
+
+        if(imgElements.length > 0) {
+            showNextSlide();
+            setInterval(showNextSlide, 6000);
         }
     </script>
 
